@@ -16,6 +16,7 @@ services:
       - "8080:80"
     volumes:
       - ./microbiome-datahub/dist:/usr/share/nginx/html:ro
+      - ./nginx-templates:/etc/nginx/templates
   es01:
     container_name: microbiome-es-1
     image: docker.elastic.co/elasticsearch/elasticsearch:7.15.0
