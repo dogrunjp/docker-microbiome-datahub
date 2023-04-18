@@ -20,9 +20,6 @@ services:
   es01:
     container_name: microbiome-es-1
     image: docker.elastic.co/elasticsearch/elasticsearch:7.15.0
-    # ports:
-      # - "9200:9200"
-      # - "9300:9300"
     volumes:
       - ./ddbj-ld-proxy/docker/elasticsearch:/usr/share/elasticsearch/config
       - ./ddbj-ld-proxy/docker/elasticsearch/entrypoint.sh:/usr/local/bin/entrypoint.sh
@@ -31,8 +28,6 @@ services:
   api:
     container_name: microbiome-api
     build: ./ddbj-ld-proxy/docker/proxy-api
-    ports:
-      - "4001:4001"
     command: npm start
     environment:
       ELASTICSEARCH_HOST: http://es01:9200
