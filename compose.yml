@@ -1,3 +1,7 @@
+volumes:
+  elastic_storage:
+  elastic_log_storage:
+
 services:
   datahub:
     container_name: microbiome-datahub
@@ -12,3 +16,26 @@ services:
       - "8080:80"
     volumes:
       - ./microbiome-datahub/dist:/usr/share/nginx/html:ro
+  es01:
+    container_name: microbiome-es-1
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.0
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - ./ddbj-ld-proxy/docker/elasticsearch:/usr/share/elasticsearch/config
+      - ./ddbj-ld-proxy/docker/elasticsearch/entrypoint.sh:/usr/local/bin/entrypoint.sh
+      - elastic_storage:/usr/share/elasticsearch/data
+      - elastic_log_storage:/usr/share/elasticsearch/logs
+  api:
+    container_name: microbiome-api
+    build: ./ddbj-ld-proxy/docker/proxy-api
+    ports:
+      - "4001:4001"
+    command: npm start
+    environment:
+      ELASTICSEARCH_HOST: http://localhost:9200
+      LOGGER: on
+      PORT: "4001"
+    depends_on:
+      - es01
