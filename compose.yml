@@ -1,0 +1,12 @@
+services:
+  datahub:
+    container_name: microbiome-datahub
+    image: node:18
+    volumes:
+      - ./microbiome-datahub:/microbiome-datahub
+    command: bin/sh -c "cd /microbiome-datahub && npm ci && npm run build"
+    # stdin_open: true
+    # tty: true
+  web:
+    container_name: microbiome-web
+    image: nginx:1.24.0
