@@ -1,6 +1,6 @@
 server {
     listen       ${NGINX_PORT};
-    listen  [::]:${NGINX_PORT};
+    # listen  [::]:${NGINX_PORT};
     server_name  ${NGINX_HOST};
 
     #access_log  /var/log/nginx/host.access.log  main;
@@ -9,10 +9,20 @@ server {
         proxy_pass http://api:4001/;
     }
 
-    # location /data {
-        # autoindex on;
-        # alias  /var/www;
-    # }
+    location /data {
+        autoindex on;
+        alias  /var/www;
+    }
+
+    location ^~ /data/project {
+        alias /var/www/project;
+        rewrite "^/data/project/(PRJ[A-Z]{2})([0-9]{3})([0-9]{3})/(.*)$" /data/project/$1/$2/$1$2$3/$4 last;
+
+        add_header Access-Control-Allow-Origin *;
+        add_header Access-Control-Allow-Methods "POST, GET, OPTIONS";
+        add_header Access-Control-Allow-Headers "Origin, Authorization, Accept";
+        add_header Access-Control-Allow-Credentials true;
+    }
 
     location / {
         root   /usr/share/nginx/html;
