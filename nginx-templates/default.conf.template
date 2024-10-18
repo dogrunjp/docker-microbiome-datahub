@@ -9,6 +9,11 @@ server {
         proxy_pass http://api:4001/;
     }
 
+    location /public {
+        autoindex on;
+        alias /var/www;
+    }
+
     location /data {
         autoindex on;
         alias  /var/www;
